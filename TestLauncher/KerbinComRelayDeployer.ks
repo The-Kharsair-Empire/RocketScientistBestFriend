@@ -1,3 +1,7 @@
+//Craft ID :
+//global craft_uid to "d53ea54c2814c1d078abcdf770c5ea7f".
+
+
 @lazyglobal off.
 
 runOncePath("0:/UtilityLibrary/utility.function.ks").
@@ -11,47 +15,53 @@ function main {
 
     prepare_launch().
     launch_countdown(10, 3).
-    onAscent(-1, 100000).
+    onAscent(2863334).
     
 }
 
 function onAscent {
 
-    parameter target_heading, target_altitude.
+    parameter target_altitude.
 
-    local roll_angle to 0. // target is 45
-    local liftOffSteering to steering. 
-    lock steering to liftOffSteering - R(0, 0, roll_angle).
 
-    notify_msg("Roll Program Started").
+    until ship:verticalspeed > 50 
 
-    until ship:verticalspeed > 50 {
-
-        set roll_angle to ship:verticalSpeed * 90 / 50.
-
-        print "Roll Angle: " + roll_angle at(terminal:width/5, terminal:height/2 + 2).
-
-        if abort {
-            AbortLaunch().
-        }
-        wait 0.1.
-    }
-    local ascentSteering to steering.
-    notify_msg("Roll Program Finalized").
     clearScreen.
 
-    lock targetPitch to (- 1.03287 * alt:radar^0.409511).// 180 - (88.963 - 1.03287 * alt:radar^0.409511). 
-    //After roll (heading due east means going north in pitch), the pitch angle now mean yaw from 0 to -90.
-    lock steering to ascentSteering + R(0, targetPitch, 0).
+    lock targetPitch to  88.963 - 1.03287 * alt:radar^0.409511.
+    local targetDirection to 90.
+    lock steering to heading(targetDirection, targetPitch).
 
-    until ship:orbit:apoapsis > target_altitude {
-        if stage:resourcesLex["LiquidFuel"]:amount = 0 {
+    local prevThrust to ship:availablethrust.
+    until ship:orbit:apoapsis > target_altitude - 10000 {
+        if ship:availableThrust < (prevThrust - 10) {
+            
+            lock throttle to 0.
             doSafeStage().
+            lock throttle to 1.
+            set prevThrust to ship:availablethrust.
         }
-        if abort {
-            AbortLaunch().
+
+        if ship:altitude > 70000 and stage:resourcesLex["LiquidFuel"]:amount = 0 { //jettison fairing
+            doSafeStage().
+            toggle ag1.
         }
+
         wait 0.1.
+    }
+
+    lock steering to heading(targetDirection, 0).
+
+    local variable_thrust to 0.
+
+    lock throttle to  variable_thrust.
+
+    until ship:orbit:apoapsis > target_altitude - 10 {
+        if (orbit:eta:apoapsis > 45 and variable_thrust > 0) {
+            set variable_thrust to variable_thrust - 0.1.
+        } else if (orbit:eta:apoapsis < 45 and variable_thrust < 1) {
+            set variable_thrust to variable_thrust + 0.1.
+        }
     }
 
 }
@@ -74,9 +84,6 @@ function executeAscentStep {
             doSafeStage().
         }
 
-        if abort {
-            AbortLaunch().
-        }
 
         if ship:altitude > minAlt {
             lock steering to heading(direction, newAngle).
@@ -100,10 +107,9 @@ function launch_countdown {
 
     print "Ignition!" at(terminal:width/5, terminal:height/2).
     doSafeStage().
-    lock steering to ship:up - R(0, 0, 180).//R(90, 90, 180).//heading(90, 90).
-    local warm_up_level to 0.
-    local warm_up_rate to 1/when_to_pre_ignite.
-    lock throttle to warm_up_level.
+    lock steering to heading(90, 90).
+    
+    lock throttle to 1.
 
 
     until count_down_from = 0 {
@@ -111,7 +117,6 @@ function launch_countdown {
         notify_msg(count_down_from).
         wait 0.98.
         set count_down_from to count_down_from - 1.
-        set warm_up_level to  warm_up_level + warm_up_rate.
     }
 
     playsound(0, 800, 0.8).
@@ -129,26 +134,3 @@ function prepare_launch {
     wait 15.
 }
 
-
-function AbortLaunch {
-    lock throttle to 0.
-
-    notify_msg("Abort Initiated!").
-    notify_msg("Engine CutOff!").
-
-    notify_msg("Fairing Jettisoned").
-    notify_msg("Crewed Module Decoupled!").
-    notify_msg("Abort Moter Fired!").
-
-
-    wait 2.
-    doSafeStage().
-    notify_msg("Launch Escape System Jettisoned!").
-    wait until alt:radar < 3000.
-    doSafeStage().
-    notify_msg("Drogue Chute Deployed!").
-    notify_msg("Main Chute Deployed!").
-
-    wait until alt:radar < 1.
-    notify_msg("Crew Landed!").
-}

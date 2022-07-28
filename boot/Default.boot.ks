@@ -7,6 +7,9 @@ if alt:radar < 100 {
     print "Booting".
     wait 1.
 
-    runPath("0:/Launcher/Ascent/Ascent.launch.ks").
-    // runPath("0:/TestLauncher/KerbinComRelayDeployer.ks").
+    switch to 0.
+    print "Ready for Command".
+
+    // runPath("0:/Launcher/Ascent/Ascent.launch.ks").
+    runPath("0:/TestLauncher/KerbinComRelayDeployer.ks").
 }
