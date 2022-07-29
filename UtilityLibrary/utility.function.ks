@@ -32,3 +32,9 @@ function delta_time {
 
     return dTime.
 }
+
+
+function closeEnough {
+    parameter a, b, margin.
+    return a - margin < b and a + margin > b.
+}
