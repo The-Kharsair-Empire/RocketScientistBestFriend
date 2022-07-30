@@ -11,5 +11,5 @@ if alt:radar < 100 {
     print "Ready for Command".
 
     // runPath("0:/Launcher/Ascent/Ascent.launch.ks").
-    // runPath("0:/TestLauncher/KerbinComRelayDeployer.ks").
+    runPath("0:/TestLauncher/Hover.ks").
 }
