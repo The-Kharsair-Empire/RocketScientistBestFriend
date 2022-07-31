@@ -1,4 +1,5 @@
 @lazyglobal off.
+//comm means communication
 
 function timeDelay {
     //kerbin:distance has bug!!

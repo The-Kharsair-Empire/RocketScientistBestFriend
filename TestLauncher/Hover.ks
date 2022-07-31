@@ -5,20 +5,20 @@ lock steering to  heading(90, 90).
 lock throttle to autoThrottle.
 rcs on.
 
-local Kp to 0.01.
-local Ki to 0.0003.
-local Kd to 0.015.
+
 
 local target_height to 100.
 local groud_height to 26.
-//proportional integral derivative
 
-local lastP to 0.
-local lastTime to 0.
-local totalP to 0.
 
-function PID_loop {
+// local lastP to 0.
+// local lastTime to 0.
+// local totalP to 0.
+
+function PID_loop { //proportional integral derivative controller
     parameter target_value, current_value.
+    parameter console_debug. //bool, adjust PID parameters if you need them printed out on screen
+    parameter Kp is 0.01, Ki is 0.0003, Kd is 0.015. // default parameter for test only
 
     local output to 0.
 
@@ -28,11 +28,24 @@ function PID_loop {
     local derivative to 0.
 
 
+    if not(defined __TKS_lastProportionalForPIDController) {
+        global __TKS_lastProportionalForPIDController to 0.
+    }
+
+    if not(defined __TKS_lastTimeValueForPIDController) {
+        global __TKS_lastTimeValueForPIDController to 0.
+    }
+
+    if not(defined __TKS_accumulatedProportionalForPIDController) {
+        global __TKS_accumulatedProportionalForPIDController to 0.
+    }
+
+
     local now to time:seconds.
 
-    if lastTime > 0 {
-        set integral to totalP + ((proportional + lastP) / 2 * (now - lastTime)).
-        set derivative to (proportional  - lastP) / (now - lastTime).
+    if __TKS_lastTimeValueForPIDController > 0 {
+        set integral to __TKS_accumulatedProportionalForPIDController + ((proportional + __TKS_lastProportionalForPIDController) / 2 * (now - __TKS_lastTimeValueForPIDController)).
+        set derivative to (proportional  - __TKS_lastProportionalForPIDController) / (now - __TKS_lastTimeValueForPIDController).
     }
 
     
@@ -40,20 +53,26 @@ function PID_loop {
 
     set output to proportional * Kp + integral * Ki + derivative * Kd.
 
-    set lastP to proportional.
-    set lastTime to now.
-    set totalP to integral.
+    set __TKS_lastProportionalForPIDController to proportional.
+    set __TKS_lastTimeValueForPIDController to now.
+    set __TKS_accumulatedProportionalForPIDController to integral.
 
-    clearScreen.
+    if console_debug {
 
-    print "P: " + proportional at(terminal:width/2, terminal:height/2).
-    print "I: " + integral at(terminal:width/2, terminal:height/2 + 1)..
-    print "D: " + derivative at(terminal:width/2, terminal:height/2 + 2)..
+        clearScreen.
 
-    print "Output: " + output at(terminal:width/2, terminal:height/2 + 3)..
+        print "P: " + proportional at(terminal:width/2, terminal:height/2).
+        print "I: " + integral at(terminal:width/2, terminal:height/2 + 1).
+        print "D: " + derivative at(terminal:width/2, terminal:height/2 + 2).
+
+        print "Output: " + output at(terminal:width/2, terminal:height/2 + 3).
+    }
+    
 
     return output.
 }
+
+
 stage.
 
 local startFuelAmount to stage:resourcesLex["LIQUIDFUEL"]:amount.

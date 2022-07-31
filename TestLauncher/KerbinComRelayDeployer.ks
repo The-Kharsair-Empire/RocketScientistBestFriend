@@ -13,9 +13,9 @@ function main {
     
     //getting defired target_heading factored in the target_inclination and latitude of the launch site.
 
-    prepare_launch().
-    launch_countdown(10, 3).
-    onAscent(2863334).
+    prepare_launch(5).
+    launch_countdown(10, 2).
+    // onAscent(2863334).
     
 }
 
@@ -95,42 +95,34 @@ function executeAscentStep {
     }
 }
 
-function launch_countdown {
-    parameter count_down_from, when_to_pre_ignite.
-    clearScreen.
-    until count_down_from = when_to_pre_ignite {
-        playsound(0, 200, 0.2).
-        notify_msg(count_down_from).
-        wait 0.98.
-        set count_down_from to count_down_from - 1.
-    }
+// function launch_countdown {
+//     parameter count_down_from, when_to_pre_ignite.
+//     clearScreen.
+//     until count_down_from = when_to_pre_ignite {
+//         playsound(0, 200, 0.2).
+//         notify_msg(count_down_from).
+//         wait 0.98.
+//         set count_down_from to count_down_from - 1.
+//     }
 
-    print "Ignition!" at(terminal:width/5, terminal:height/2).
-    doSafeStage().
-    lock steering to heading(90, 90).
+//     print "Ignition!" at(terminal:width/5, terminal:height/2).
+//     doSafeStage().
+//     lock steering to heading(90, 90).
     
-    lock throttle to 1.
+//     lock throttle to 1.
 
 
-    until count_down_from = 0 {
-        playsound(0, 400, 0.5).
-        notify_msg(count_down_from).
-        wait 0.98.
-        set count_down_from to count_down_from - 1.
-    }
+//     until count_down_from = 0 {
+//         playsound(0, 400, 0.5).
+//         notify_msg(count_down_from).
+//         wait 0.98.
+//         set count_down_from to count_down_from - 1.
+//     }
 
-    playsound(0, 800, 0.8).
-    notify_msg("Lift Off!").
-    print "Lift Off!" at(terminal:width/5, terminal:height/2 + 1).
-    doSafeStage().
+//     playsound(0, 800, 0.8).
+//     notify_msg("Lift Off!").
+//     print "Lift Off!" at(terminal:width/5, terminal:height/2 + 1).
+//     doSafeStage().
     
-}
-
-function prepare_launch {
-    abort off.
-    clearScreen.
-    print "Clearing Launch Facility" at(terminal:width/5, terminal:height/2).
-    toggle ag10.
-    wait 15.
-}
+// }
 
