@@ -46,7 +46,8 @@ function get_desired_orbital_period {
     //assuming the angle when your craft is at the intersecting point of two orbits, i.e. Ap or Pe during classical rendevous
     parameter target_orbitable.
 
-    return target_orbitable:obt:period * (1 + ((360 - target_phase_angle(target_orbitable))/ 360)).
+    return target_orbitable:obt:period * (1 + ((360 - target_phase_angle(target_orbitable))/ 360)). // TODO: optimizable, if target is 5 degree ahead you just need to lower your orbit by the time it 
+                                                                                                    // takes to travel 5 deg instead of raising it to + another target orbit period.
 }
 
 
