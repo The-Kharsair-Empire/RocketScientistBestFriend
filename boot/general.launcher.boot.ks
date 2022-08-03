@@ -7,9 +7,15 @@ if alt:radar < 100 {
     print "Booting".
     wait 1.
 
-    switch to 0.
+    // switch to 0.
     print "Ready for Command".
 
     // runPath("0:/Launcher/Ascent/Ascent.launch.ks").
     // runPath("0:/TestLauncher/TestLaunch.ks").
+    // runOncePath("0:/UtilityLibrary/maneuver.function.ks").
+    // runOncePath("0:/UtilityLibrary/navigation.function.ks").
+
+
 }
+
+

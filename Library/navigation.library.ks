@@ -1,6 +1,6 @@
 @lazyGlobal off.
 
-runOncePath("maths.function.ks").
+runOncePath("maths.library.ks").
 
 function get_orbitable {
     parameter name.
@@ -45,8 +45,9 @@ function get_desired_orbital_period {
     //calculate the desired orbital period to put your vessel into when rendevous with a target craft around the same parent body.
     //assuming the angle when your craft is at the intersecting point of two orbits, i.e. Ap or Pe during classical rendevous
     parameter target_orbitable.
+    parameter number_of_pass is 1. //do you want to rendevous after x pass of orbit (to save fuel and make relative velocity more manageable).
 
-    return target_orbitable:obt:period * (1 + ((360 - target_phase_angle(target_orbitable))/ 360)). // TODO: optimizable, if target is 5 degree ahead you just need to lower your orbit by the time it 
+    return target_orbitable:obt:period * (1 + ((360 - target_phase_angle(target_orbitable))/ 360 / number_of_pass)). // TODO: optimizable, if target is 5 degree ahead you just need to lower your orbit by the time it 
                                                                                                     // takes to travel 5 deg instead of raising it to + another target orbit period.
 }
 
@@ -57,7 +58,7 @@ function target_phase_angle_on_equatorial_orbit {
     parameter my_longitude is ship:longitude.
 
     return mod(
-        lng_to_degree(get_orbitable(target_orbitable):longitude)
+        lng_to_degree(target_orbitable:longitude)
         - lng_to_degree(my_longitude) + 360,
         360
     ).
@@ -73,3 +74,17 @@ function get_desired_orbital_period_on_equatorial_orbit { //test only
 
     return target_orbitable:obt:period * (1 + ((360 - target_phase_angle_on_equatorial_orbit(target_orbitable, my_longitude))/ 360)).
 }
+
+
+
+// function test {
+//     rcs off.
+//     until false {
+//         wait until rcs.
+//         print "mun is " + target_phase_angle(get_orbitable("mun")) + " degrees ahead".
+//         print "(equatorial) mun is " + target_phase_angle_on_equatorial_orbit(get_orbitable("mun")) + " degrees ahead".
+        
+//         rcs off.
+//     }
+// }
+// test().

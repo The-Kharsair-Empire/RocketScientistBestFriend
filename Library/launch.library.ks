@@ -1,16 +1,21 @@
 @lazyglobal off.
 
-runOncePath("utility.function.ks").
+runOncePath("shipsys.library.ks").
+
 
 function low_altitude_ascent { //TODO:
     // until ship:altitude > 10000
-
 
 }
 
 function high_altitude_ascent { //TODO:
 
 }
+
+function circularization { //TODO:
+    parameter atApoapsis. //true -> bring smaller elliptical orbit up to circular orbit at apoapsis (orbital insertion). false -> bring large elliptical orbit down to circular at periapsis (capture to low orbit)
+}
+
 
 function prepare_launch {
     parameter preparingTime.

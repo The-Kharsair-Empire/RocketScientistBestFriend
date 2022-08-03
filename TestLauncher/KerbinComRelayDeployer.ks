@@ -4,7 +4,8 @@
 
 @lazyglobal off.
 
-runOncePath("0:/UtilityLibrary/utility.function.ks").
+runOncePath("0:/Library/utility.function.ks").
+runOncePath("0:/Library/launch.function.ks").
 
 
 main().
@@ -37,13 +38,13 @@ function onAscent {
         if ship:availableThrust < (prevThrust - 10) {
             
             lock throttle to 0.
-            doSafeStage().
+            do_safe_stage().
             lock throttle to 1.
             set prevThrust to ship:availablethrust.
         }
 
         if ship:altitude > 70000 and stage:resourcesLex["LiquidFuel"]:amount = 0 { //jettison fairing
-            doSafeStage().
+            do_safe_stage().
             toggle ag1.
         }
 
@@ -75,13 +76,13 @@ function executeAscentStep {
         if ship:availableThrust < (prevThrust - 10) {
             local currentThrottle to throttle.
             lock throttle to 0.
-            doSafeStage().
+            do_safe_stage().
             lock throttle to currentThrottle.
             set prevThrust to ship:availablethrust.
         }
 
         if ship:altitude > 70000 and stage:resourcesLex["LiquidFuel"]:amount = 0 { //jettison fairing
-            doSafeStage().
+            do_safe_stage().
         }
 
 

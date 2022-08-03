@@ -4,7 +4,7 @@
 
 @lazyglobal off.
 
-runOncePath("0:/UtilityLibrary/launch.function.ks").
+runOncePath("0:/Library/launch.function.ks").
 
 main().
 

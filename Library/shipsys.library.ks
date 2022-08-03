@@ -33,16 +33,6 @@ function play_sound {
     V0:PLAY( NOTE(frequency, length) ).                        
 }
 
-function delta_time {
-    if not(defined __TKE_lastTimeStampForDeltaTimeCalcualtion) {
-        global __TKE_lastTimeStampForDeltaTimeCalcualtion to time:seconds.
-    }
-
-    local dTime to time:seconds - __TKE_lastTimeStampForDeltaTimeCalcualtion.
-    set __TKE_lastTimeStampForDeltaTimeCalcualtion to time:seconds.
-
-    return dTime.
-}
 
 
 
@@ -146,9 +136,6 @@ function arm_event_trigger {
 
 
 
-function circularization { //TODO:
-    parameter atApoapsis. //true -> bring smaller elliptical orbit up to circular orbit at apoapsis (orbital insertion). false -> bring large elliptical orbit down to circular at periapsis (capture to low orbit)
-}
 
 
 

@@ -40,7 +40,7 @@ function download_file_from_ksc {
 }
 
 
-function upload {
+function upload_file_to_ksc {
     parameter filename.
 
     if has_file(filename, 0) {
@@ -56,6 +56,9 @@ function upload {
     }
 
 }
+
+
+// function
 
 
 function check_for_script_update {
@@ -96,4 +99,10 @@ function reboot_space_craft_mid_flight {
         reboot.
     }
     
+}
+
+
+function require {
+    parameter file.
+
 }
