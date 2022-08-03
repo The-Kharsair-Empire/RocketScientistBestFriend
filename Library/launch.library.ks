@@ -28,6 +28,7 @@ function prepare_launch {
 
 function launch_countdown {
     parameter count_down_from, when_to_pre_ignite.
+    parameter pre_ignition is true.
     clearScreen.
     until count_down_from = when_to_pre_ignite {
         play_sound(0, 200, 0.2).
@@ -36,8 +37,12 @@ function launch_countdown {
         set count_down_from to count_down_from - 1.
     }
 
-    print "Ignition!" at(terminal:width/5, terminal:height/2).
-    do_safe_stage().
+    if pre_ignition {
+        print "Ignition!" at(terminal:width/5, terminal:height/2).
+        do_safe_stage().
+    }
+
+
     lock steering to heading(90, 90).
     
     lock throttle to 1.
@@ -52,6 +57,9 @@ function launch_countdown {
 
     play_sound(0, 800, 0.8).
     notify_msg("Lift Off!").
+    if not pre_ignition {
+        print "Ignition!" at(terminal:width/5, terminal:height/2).
+    }
     print "Lift Off!" at(terminal:width/5, terminal:height/2 + 1).
     do_safe_stage().
     

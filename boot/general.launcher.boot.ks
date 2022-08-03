@@ -12,7 +12,7 @@ if alt:radar < 100 {
 
     // runPath("0:/Launcher/Ascent/Ascent.launch.ks").
     // runPath("0:/TestLauncher/TestLaunch.ks").
-    // runOncePath("0:/UtilityLibrary/maneuver.function.ks").
+    runOncePath("0:/Library/maneuver.library.ks").
     // runOncePath("0:/UtilityLibrary/navigation.function.ks").
 
 
