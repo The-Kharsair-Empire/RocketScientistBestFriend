@@ -77,7 +77,7 @@ stage.
 
 local startFuelAmount to stage:resourcesLex["LIQUIDFUEL"]:amount.
 
-until stage:resourcesLex["LIQUIDFUEL"]:amount < startFuelAmount * 3/4 {
+until stage:resourcesLex["LIQUIDFUEL"]:amount < startFuelAmount * 1/4 {
     set autoThrottle to max(0, min(PID_loop(target_height, alt:radar), 1)).
     wait 0.01.
 }

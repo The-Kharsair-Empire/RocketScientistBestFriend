@@ -107,6 +107,10 @@ function lower_periapsis {
 
 }
 
+function circularization {
+    
+}
+
 function achieve_circular_orbit_with_period {
     parameter period. // in seconds
 
@@ -114,39 +118,39 @@ function achieve_circular_orbit_with_period {
 
 
 
-function test {
-    rcs off.
-    until false {
-        wait until rcs.
-        if (hasNode) {
-            local targetalt is nextNode:orbit:apoapsis.
-            local dv1 is get_vis_viva_dv1(ship:orbit:semimajoraxis - ship:body:radius, targetalt).
-            local dv2 is get_vis_viva_dv2(ship:orbit:semimajoraxis - ship:body:radius, targetalt).
-            print "target alt is: " + targetalt.
-            print "dV for transfer 1 :  " + dv1.
-            print "dV for transfer 2 :  " + dv2.
-            print "dV for Hohmann transfer:  " + get_hohmann_transfer_dv(targetalt).
+// function test {
+//     rcs off.
+//     until false {
+//         wait until rcs.
+//         if (hasNode) {
+//             local targetalt is nextNode:orbit:apoapsis.
+//             local dv1 is get_vis_viva_dv1(ship:orbit:semimajoraxis - ship:body:radius, targetalt).
+//             local dv2 is get_vis_viva_dv2(ship:orbit:semimajoraxis - ship:body:radius, targetalt).
+//             print "target alt is: " + targetalt.
+//             print "dV for transfer 1 :  " + dv1.
+//             print "dV for transfer 2 :  " + dv2.
+//             print "dV for Hohmann transfer:  " + get_hohmann_transfer_dv(targetalt).
 
-            local burn_time1 to  get_mnv_burn_time(dv1, false).
-            local burn_time1_split to  get_mnv_burn_time(dv1, true).
-            print "burn time for transfer 1 (whole): " + burn_time1.
-            print "burn time for transfer 1 (split): t1 = " + burn_time1_split[0] + " t2 = " + burn_time1_split[1].
+//             local burn_time1 to  get_mnv_burn_time(dv1, false).
+//             local burn_time1_split to  get_mnv_burn_time(dv1, true).
+//             print "burn time for transfer 1 (whole): " + burn_time1.
+//             print "burn time for transfer 1 (split): t1 = " + burn_time1_split[0] + " t2 = " + burn_time1_split[1].
 
 
-            local burn_time2 to  get_mnv_burn_time(dv2, false).
-            local burn_time2_split to  get_mnv_burn_time(dv2, true).
-            print "burn time for transfer 2 (whole): " + burn_time2.
-            print "burn time for transfer 2 (split): t1 = " + burn_time2_split[0] + " t2 = " + burn_time2_split[1].
-            print " ".
-            print " ".
-            print " ".
-        } else {
-            print "no node detected".
-            print " ".
-        }
+//             local burn_time2 to  get_mnv_burn_time(dv2, false).
+//             local burn_time2_split to  get_mnv_burn_time(dv2, true).
+//             print "burn time for transfer 2 (whole): " + burn_time2.
+//             print "burn time for transfer 2 (split): t1 = " + burn_time2_split[0] + " t2 = " + burn_time2_split[1].
+//             print " ".
+//             print " ".
+//             print " ".
+//         } else {
+//             print "no node detected".
+//             print " ".
+//         }
         
-        rcs off.
-    }
-}
+//         rcs off.
+//     }
+// }
 
-test().
+// test().

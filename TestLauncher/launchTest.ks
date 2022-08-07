@@ -4,7 +4,8 @@
 
 @lazyglobal off.
 
-runOncePath("0:/Library/launch.function.ks").
+runOncePath("0:/Library/launch.library.ks").
+runOncePath("0:/Library/shipsys.library.ks").
 
 main().
 
@@ -14,6 +15,35 @@ function main {
 
     prepare_launch(3).
     launch_countdown(5, 1).
+
+
+    // arm_auto_LV_staging(2).
+
+    // arm_event_trigger({return ship:STAGEDELTAV(ship:STAGENUM):current < 1000.}, 
+    //     {
+    //         do_safe_stage().
+    //     }, true, "Booster Separation"
+    // ).
+
+    // arm_event_trigger({return ship:altitude > 65000.}, 
+    //     {
+    //         toggle ag9.
+    //     }, true, "Fairing Jettisoned"
+    // ).
+
+
+    // arm_event_trigger({return ship:altitude > 70000.}, 
+    //     {
+    //         toggle ag1.
+    //     }, true, "Extend Solar Array and Antenna"
+    // ).
+
+
+    low_altitude_ascent().
+    mid_altitude_ascent().
+    high_altitude_ascent().
+    orbital_insertion().
+    
 
     // armAutoLVStagingTool(1).
 
@@ -52,7 +82,7 @@ function main {
     //     }, true, "Abort Test"
     // ).
 
-    wait until false.
+    // wait until false.
 
 
     // onAscent(2863334).

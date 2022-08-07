@@ -7,4 +7,4 @@ print "Booting".
 wait 1.
 
 
-runOncePath("0:/TestLauncher/pidTest.ks").
+runOncePath("0:/TestLauncher/launchTest.ks").
