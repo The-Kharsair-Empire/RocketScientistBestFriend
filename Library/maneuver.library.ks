@@ -108,11 +108,33 @@ function lower_periapsis {
 }
 
 function circularization {
-    
+
 }
 
 function achieve_circular_orbit_with_period {
     parameter period. // in seconds
+
+}
+
+function de_orbit {
+    parameter target_periapsis.
+
+    parameter additional_actions is {}.
+
+
+    local target_throttle is 0.
+    lock throttle to target_throttle.
+    lock steering to ship:retrograde.
+    wait until vAng(ship:facing:forevector, ship:retrograde) < 2.0.
+    set target_throttle to 1.
+    until ship:periapsis <= target_periapsis {
+        set target_throttle to  1 - (target_periapsis/ship:periapsis * 0.99).
+        wait 0.1.
+    }
+    
+    lock throttle to 0.
+
+    additional_actions().
 
 }
 

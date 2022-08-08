@@ -1,6 +1,6 @@
 @lazyGlobal off.
 
-runOncePath("maths.library.ks").
+runOncePath("0:/Library/maths.library.ks").
 
 function get_orbitable {
     parameter name.
@@ -40,6 +40,7 @@ function target_phase_angle { // assume same inclination and same parent body. a
     }
 
 }
+
 
 function get_desired_orbital_period { 
     //calculate the desired orbital period to put your vessel into when rendevous with a target craft around the same parent body.

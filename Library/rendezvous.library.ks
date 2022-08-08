@@ -28,6 +28,18 @@ function change_orbital_period {
 }
 
 
+function rendezvous_with_target_vessel {
+    parameter target_vessel.
+
+    if ship:body <> target_vessel:body {
+
+    }
+    
+}
+
+
+
+
 function await_cloest_approach { //waiting to be found out whether doing this is safe. ....
     parameter target_vessel.
 

@@ -17,7 +17,7 @@ function main {
     launch_countdown(5, 1).
 
 
-    // arm_auto_LV_staging(2).
+    arm_auto_LV_staging(2).
 
     // arm_event_trigger({return ship:STAGEDELTAV(ship:STAGENUM):current < 1000.}, 
     //     {
@@ -31,18 +31,41 @@ function main {
     //     }, true, "Fairing Jettisoned"
     // ).
 
+    // arm_event_trigger({return ship:altitude > 30000.}, 
+    //     {
+    //         toggle ag8.
+    //     }, true, "Launch Escape System Jettisoned"
+    // ).
+
 
     // arm_event_trigger({return ship:altitude > 70000.}, 
     //     {
     //         toggle ag1.
-    //     }, true, "Extend Solar Array and Antenna"
+    //     }, true, "Solar Panel Deployed, Antenna Deployed"
     // ).
+
+    arm_event_trigger({return ship:altitude > 70000.}, 
+        {
+            toggle ag1.
+        }, true, "Antenna Deployed"
+    ).
 
 
     low_altitude_ascent().
     mid_altitude_ascent().
     high_altitude_ascent().
     orbital_insertion().
+    // wait 10.
+    // notify_msg("Beginning Descent Procedural").
+    // wait 2.
+    // warpTo(time:seconds + 2/5 * ship:obt:period).
+    // de_orbit(20000, {
+    //     do_safe_stage().
+    //     do_safe_stage().
+    //     notify_msg("De-Orbit Completed").
+    // }).
+
+    
     
 
     // armAutoLVStagingTool(1).

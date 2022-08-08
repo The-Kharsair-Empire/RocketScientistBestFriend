@@ -120,6 +120,7 @@ function high_altitude_ascent { //TODO:
 function orbital_insertion { 
     parameter target_altitude is 100000.
     parameter target_heading is 90.
+    // parameter wrap_during_wait is true.
     clearScreen.
 
     
@@ -131,6 +132,11 @@ function orbital_insertion {
 
     lock steering to heading(target_heading, 0).
 
+    // if wrap_during_wait {
+    //     warpTo(time:seconds + eta:apoapsis - burn_time[0] - 30).
+    // }
+    
+
     wait until burn_time[0] >= eta:apoapsis.
     lock throttle to 1.
     wait total_burn_time - 1.5.
@@ -140,6 +146,9 @@ function orbital_insertion {
     }
 
     notify_msg("Orbital Insertion Completed").
+    lock throttle to 0.
+    unlock steering.
+    
 }
 
 
