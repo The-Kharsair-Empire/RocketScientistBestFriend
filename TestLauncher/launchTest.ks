@@ -50,11 +50,24 @@ function main {
         }, true, "Antenna Deployed"
     ).
 
+    // arm_event_trigger({return ship:altitude > 70000.}, 
+    //     {
+    //         toggle ag1.
+    //     }, true, "Fairing Deployed"
+    // ).
 
-    low_altitude_ascent().
-    mid_altitude_ascent().
+
+
+    low_altitude_ascent(20000).
+    mid_altitude_ascent(45000).
     high_altitude_ascent().
+    // if shuttle, activate ag9.
     orbital_insertion().
+
+    // low_altitude_ascent(15000).
+    // mid_altitude_ascent(45000).
+    // high_altitude_ascent(400000).
+    // orbital_insertion(400000).
     // wait 10.
     // notify_msg("Beginning Descent Procedural").
     // wait 2.

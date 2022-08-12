@@ -4,12 +4,13 @@ runOncePath("0:/Library/shipsys.library.ks").
 runOncePath("0:/Library/maneuver.library.ks").
 runOncePath("0:/Library/maths.library.ks").
 
-
+//TODO: allow these funciton to take in optional roll angle of launch vehicle (for shuttle, etc)
 function low_altitude_ascent { 
     // default heading 90 (equatorial orbit)
+    parameter end_altitude is 10000.
     parameter target_heading is 90.
     parameter start_pitch is 90, end_pitch is 45, start_twr is 1.33, end_twr is 2.2.
-    parameter end_altitude is 10000.
+    
 
     notify_msg("Maintaining Low Altitude Ascent Profile").
 
@@ -39,9 +40,10 @@ function low_altitude_ascent {
 
 function mid_altitude_ascent { 
     // default heading 90 (equatorial orbit)
+    parameter end_altitude is 40000.
     parameter target_heading is 90.
     parameter start_pitch is 45, end_pitch is 10, start_twr is (ship:availablethrust / ship:mass) / (body:mu / (body:radius + ship:altitude) ^ 2), end_twr is 2.6.
-    parameter end_altitude is 40000.
+    
 
     notify_msg("Maintaining Mid Altitude Ascent Profile").
 
