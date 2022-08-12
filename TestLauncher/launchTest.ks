@@ -47,22 +47,36 @@ function main {
     arm_event_trigger({return ship:altitude > 70000.}, 
         {
             toggle ag1.
-        }, true, "Antenna Deployed"
+        }, true, "Deployed"
     ).
+
+    arm_event_trigger({return ship:altitude > 65000.}, 
+        {
+            toggle ag9.
+        }, true, "Fairing Deployed"
+    ).
+
 
     // arm_event_trigger({return ship:altitude > 70000.}, 
     //     {
     //         toggle ag1.
     //     }, true, "Fairing Deployed"
     // ).
-
-
-
-    low_altitude_ascent(20000).
-    mid_altitude_ascent(45000).
+    
+    low_altitude_ascent().
+    mid_altitude_ascent().
     high_altitude_ascent().
-    // if shuttle, activate ag9.
     orbital_insertion().
+
+    // default_ascent_profile(200000, 0).
+
+
+
+    // low_altitude_ascent(12000, 0).
+    // mid_altitude_ascent(47000, 0).
+    // high_altitude_ascent(200000, 0).
+    // // if shuttle, activate ag9.
+    // orbital_insertion().
 
     // low_altitude_ascent(15000).
     // mid_altitude_ascent(45000).

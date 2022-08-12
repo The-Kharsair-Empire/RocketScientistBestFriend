@@ -5,6 +5,16 @@ runOncePath("0:/Library/maneuver.library.ks").
 runOncePath("0:/Library/maths.library.ks").
 
 //TODO: allow these funciton to take in optional roll angle of launch vehicle (for shuttle, etc)
+function default_ascent_profile {
+    parameter target_altitude, target_heading.
+
+    low_altitude_ascent(10000, target_heading).
+    mid_altitude_ascent(40000, target_heading).
+    high_altitude_ascent(target_altitude, target_heading).
+    orbital_insertion(target_altitude, target_heading).
+}
+
+
 function low_altitude_ascent { 
     // default heading 90 (equatorial orbit)
     parameter end_altitude is 10000.
