@@ -1,5 +1,3 @@
-//Craft ID :
-//global craft_uid to "d53ea54c2814c1d078abcdf770c5ea7f".
 
 
 @lazyglobal off.
@@ -50,11 +48,11 @@ function main {
         }, true, "Deployed"
     ).
 
-    arm_event_trigger({return ship:altitude > 65000.}, 
-        {
-            toggle ag9.
-        }, true, "Fairing Deployed"
-    ).
+    // arm_event_trigger({return ship:altitude > 65000.}, 
+    //     {
+    //         toggle ag9.
+    //     }, true, "Fairing Deployed"
+    // ).
 
 
     // arm_event_trigger({return ship:altitude > 70000.}, 

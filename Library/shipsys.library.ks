@@ -74,7 +74,7 @@ function has_functioning_engine {
     list engines in allEngines.
 
     for engine in allEngines {
-        if engine:ignition {
+        if engine:ignition and (not engine:flameout) {
             return true.
         }
     }
@@ -98,10 +98,11 @@ function arm_auto_LV_staging {
 
     when __TKE_currentStageThrust - ship:availableThrust > 10 then {
         do_safe_stage().
-        set __TKE_burnoutStageCounter to __TKE_burnoutStageCounter + 1. 
+        
 
         if (has_functioning_engine()) {
             set __TKE_currentStageThrust to ship:availablethrust.
+            set __TKE_burnoutStageCounter to __TKE_burnoutStageCounter + 1. 
         }
         
         if __TKE_burnoutStageCounter < NumberOfStages {

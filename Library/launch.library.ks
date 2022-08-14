@@ -102,7 +102,7 @@ function high_altitude_ascent { //TODO:
             set target_pitch to min(start_pitch, target_pitch + 1).
         }
         print "Target Pitch: " + target_pitch at(terminal:width/5, terminal:height/2).
-        if eta:apoapsis < 20 {
+        if eta:apoapsis < 30 {
             set throttleFineTuneParameter to max(0.7, throttleFineTuneParameter - 0.1).
         } else if eta:apoapsis > 90 {
             set throttleFineTuneParameter to min(0.99, throttleFineTuneParameter + 0.1).
@@ -132,7 +132,7 @@ function high_altitude_ascent { //TODO:
 function orbital_insertion { 
     parameter target_altitude is 100000.
     parameter target_heading is 90.
-    // parameter wrap_during_wait is true.
+    parameter autoWrap is true.
     clearScreen.
 
     
@@ -144,16 +144,17 @@ function orbital_insertion {
 
     lock steering to heading(target_heading, 0).
 
-    // if wrap_during_wait {
-    //     warpTo(time:seconds + eta:apoapsis - burn_time[0] - 30).
-    // }
+    if autoWrap {
+        warpTo(time:seconds + eta:apoapsis - burn_time[0] - 30).
+    }
     
 
     wait until burn_time[0] >= eta:apoapsis.
-    lock throttle to 1.
+    local autoThrottle to 1.
+    lock throttle to autoThrottle.
     wait total_burn_time - 1.5.
     until close_enough(ship:apoapsis, ship:periapsis, 200) or (not close_enough(ship:apoapsis, target_altitude, 500)) {
-        lock throttle to 1 - (ship:periapsis / ship:apoapsis * 0.97).
+        set autoThrottle to 1 - (ship:periapsis / ship:apoapsis * 0.97).
         wait 0.1.
     }
 
