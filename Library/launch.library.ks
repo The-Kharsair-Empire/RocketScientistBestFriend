@@ -17,7 +17,7 @@ function default_ascent_profile {
 
 function low_altitude_ascent { 
     // default heading 90 (equatorial orbit)
-    parameter end_altitude is 10000.
+    parameter end_altitude is 35000.
     parameter target_heading is 90.
     parameter start_pitch is 90, end_pitch is 45, start_twr is 1.33, end_twr is 2.2.
     
@@ -43,16 +43,16 @@ function low_altitude_ascent {
     until ship:altitude > end_altitude {
         print "Target Pitch: " + target_pitch at(terminal:width/5, terminal:height/2).
         print "Optimized TWR: " + target_twr at(terminal:width/5, terminal:height/2 + 1).
-        print "Adjusted Throttle" + throttle at(terminal:width/5, terminal:height/2 + 2).
+        print "Adjusted Throttle: " + throttle at(terminal:width/5, terminal:height/2 + 2).
         wait 0.1.
     }
 }
 
 function mid_altitude_ascent { 
     // default heading 90 (equatorial orbit)
-    parameter end_altitude is 40000.
+    parameter end_altitude is 100000.
     parameter target_heading is 90.
-    parameter start_pitch is 45, end_pitch is 10, start_twr is (ship:availablethrust / ship:mass) / (body:mu / (body:radius + ship:altitude) ^ 2), end_twr is 2.6.
+    parameter start_pitch is 45, end_pitch is 0, start_twr is (ship:availablethrust / ship:mass) / (body:mu / (body:radius + ship:altitude) ^ 2), end_twr is 2.6.
     
 
     notify_msg("Maintaining Mid Altitude Ascent Profile").
@@ -73,64 +73,62 @@ function mid_altitude_ascent {
     until ship:altitude > end_altitude {
         print "Target Pitch: " + target_pitch at(terminal:width/5, terminal:height/2).
         print "Optimized TWR: " + target_twr at(terminal:width/5, terminal:height/2 + 1).
-        print "Adjusted Throttle" + throttle at(terminal:width/5, terminal:height/2 + 2).
+        print "Adjusted Throttle: " + throttle at(terminal:width/5, terminal:height/2 + 2).
         wait 0.1.
     }
 }
 
 function high_altitude_ascent { //TODO:
-    parameter target_altitude is 100000.
+    parameter target_altitude is 200000.
     parameter target_heading is 90.
-    parameter start_pitch is 10.
+    parameter max_pitch is 13.
     // parameter start_pitch is 45, end_pitch is 5.
     clearScreen.
 
     notify_msg("Maintaining High Altitude Ascent Profile").
 
-    local target_throttle to 1.
+    lock target_throttle to (1 - max(0, min(1, ship:periapsis)) * (ship:apoapsis/target_altitude * 0.99)).
+    
     lock throttle to target_throttle.
-    local target_pitch is start_pitch.
+    lock target_pitch to max(0, min(max_pitch, (1 - (eta:apoapsis - 30) / (60 - 30)) * (max_pitch - 0))).
     lock steering to heading(target_heading, target_pitch).
 
-    // local start_altitude is ship:altitude.
-    local throttleFineTuneParameter to 0.93.
-
     until ship:apoapsis >= target_altitude {
-        if eta:apoapsis > 45 {
-            set target_pitch to max(0, target_pitch - 1).
-        } else if eta:apoapsis < 45 {
-            set target_pitch to min(start_pitch, target_pitch + 1).
-        }
+
         print "Target Pitch: " + target_pitch at(terminal:width/5, terminal:height/2).
-        if eta:apoapsis < 30 {
-            set throttleFineTuneParameter to max(0.7, throttleFineTuneParameter - 0.1).
-        } else if eta:apoapsis > 90 {
-            set throttleFineTuneParameter to min(0.99, throttleFineTuneParameter + 0.1).
-        }
-        set target_throttle to  1 - (ship:apoapsis/target_altitude * throttleFineTuneParameter).
-        wait 0.1.
+        print "throttle down ratio: " +  max(0, min(1, ship:periapsis)) * ship:apoapsis/target_altitude * 0.99 at(terminal:width/5, terminal:height/2 + 5).
+        print "adjusted throttle: " + target_throttle at(terminal:width/5, terminal:height/2 + 6).
+        print "actual throttle: " + throttle at(terminal:width/5, terminal:height/2 + 8).
+        // if ship:periapsis > 0 {
+        //     lock throttle to 
+        // }
+
+        wait 1.
     }
 
-    set target_throttle to 0.
-    lock steering to ship:prograde.
-    notify_msg("Wait for reaching Karmen line and adjust ship Apoapsis").
+    // set target_throttle to 0.
 
-    wait until ship:altitude > 70000.
+   
+    // lock steering to ship:prograde.
+    // notify_msg("Wait for reaching Karmen line and adjust ship Apoapsis").
 
-    notify_msg("Adjusting Apoapsis").
+    // wait until ship:altitude > 70000.
 
-    until ship:apoapsis >= target_altitude {
-        set target_throttle to  1 - (ship:apoapsis/target_altitude * 0.99).
-        wait 0.05.
-    }
+    // notify_msg("Adjusting Apoapsis").
+
+    // until ship:apoapsis >= target_altitude {
+    //     set target_throttle to  1 - (ship:apoapsis/target_altitude * 0.99).
+    //     wait 0.05.
+    // }
 
     lock throttle to 0.
+    unlock steering.
 
     notify_msg("Target Altitude Reached, Waiting For Orbital Insertion Burn").
 }
 
 function orbital_insertion { 
-    parameter target_altitude is 100000.
+    parameter target_altitude is 200000.
     parameter target_heading is 90.
     parameter autoWrap is true.
     clearScreen.

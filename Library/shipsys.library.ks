@@ -21,10 +21,10 @@ function do_quick_stage {
 }
 
 function do_safe_stage {
-    local currentThrottle to throttle.
+    // local currentThrottle to throttle.
     __do_safe_stage(). wait 0.4.
-    lock throttle to 0.
-    lock throttle to currentThrottle.
+    // lock throttle to 0.
+    // lock throttle to currentThrottle.
 }
 
 function play_sound {
