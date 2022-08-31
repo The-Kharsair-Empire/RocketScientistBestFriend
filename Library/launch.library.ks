@@ -5,19 +5,19 @@ runOncePath("0:/Library/maneuver.library.ks").
 runOncePath("0:/Library/maths.library.ks").
 
 //TODO: allow these funciton to take in optional roll angle of launch vehicle (for shuttle, etc)
-function default_ascent_profile {
-    parameter target_altitude, target_heading.
+// function default_ascent_profile {
+//     parameter target_altitude, target_heading.
 
-    low_altitude_ascent(10000, target_heading).
-    mid_altitude_ascent(40000, target_heading).
-    high_altitude_ascent(target_altitude, target_heading).
-    orbital_insertion(target_altitude, target_heading).
-}
+//     low_altitude_ascent(10000, target_heading).
+//     mid_altitude_ascent(40000, target_heading).
+//     high_altitude_ascent(target_altitude, target_heading).
+//     orbital_insertion(target_altitude, target_heading).
+// }
 
 
 function low_altitude_ascent { 
     // default heading 90 (equatorial orbit)
-    parameter end_altitude is 35000.
+    parameter end_altitude is 50000.
     parameter target_heading is 90.
     parameter start_pitch is 90, end_pitch is 45, start_twr is 1.33, end_twr is 2.2.
     
@@ -50,7 +50,7 @@ function low_altitude_ascent {
 
 function mid_altitude_ascent { 
     // default heading 90 (equatorial orbit)
-    parameter end_altitude is 100000.
+    parameter end_altitude is 130000.
     parameter target_heading is 90.
     parameter start_pitch is 45, end_pitch is 0, start_twr is (ship:availablethrust / ship:mass) / (body:mu / (body:radius + ship:altitude) ^ 2), end_twr is 2.6.
     
@@ -81,13 +81,15 @@ function mid_altitude_ascent {
 function high_altitude_ascent { //TODO:
     parameter target_altitude is 200000.
     parameter target_heading is 90.
-    parameter max_pitch is 13.
+    parameter max_pitch is 20.
     // parameter start_pitch is 45, end_pitch is 5.
     clearScreen.
 
     notify_msg("Maintaining High Altitude Ascent Profile").
 
-    lock target_throttle to (1 - max(0, min(1, ship:periapsis)) * (ship:apoapsis/target_altitude * 0.99)).
+    local throttle_param to max(0, min(1, ship:periapsis)).
+
+    lock target_throttle to (1 - throttle_param * (ship:apoapsis/target_altitude)).
     
     lock throttle to target_throttle.
     lock target_pitch to max(0, min(max_pitch, (1 - (eta:apoapsis - 30) / (60 - 30)) * (max_pitch - 0))).
@@ -99,6 +101,12 @@ function high_altitude_ascent { //TODO:
         print "throttle down ratio: " +  max(0, min(1, ship:periapsis)) * ship:apoapsis/target_altitude * 0.99 at(terminal:width/5, terminal:height/2 + 5).
         print "adjusted throttle: " + target_throttle at(terminal:width/5, terminal:height/2 + 6).
         print "actual throttle: " + throttle at(terminal:width/5, terminal:height/2 + 8).
+        if (ship:apoapsis/target_altitude) > 0.96 {
+            set throttle_param to 0.99.
+        } else {
+            set throttle_param to max(0, min(1, ship:periapsis)) * 0.99.
+        }
+        
         // if ship:periapsis > 0 {
         //     lock throttle to 
         // }
