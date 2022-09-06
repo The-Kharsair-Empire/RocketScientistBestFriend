@@ -17,7 +17,7 @@ runOncePath("0:/Library/maths.library.ks").
 
 function low_altitude_ascent { 
     // default heading 90 (equatorial orbit)
-    parameter end_altitude is 50000.
+    parameter end_altitude is 30000.
     parameter target_heading is 90.
     parameter start_pitch is 90, end_pitch is 45, start_twr is 1.33, end_twr is 2.2.
     
@@ -50,9 +50,9 @@ function low_altitude_ascent {
 
 function mid_altitude_ascent { 
     // default heading 90 (equatorial orbit)
-    parameter end_altitude is 130000.
+    parameter end_altitude is 100000.
     parameter target_heading is 90.
-    parameter start_pitch is 45, end_pitch is 0, start_twr is (ship:availablethrust / ship:mass) / (body:mu / (body:radius + ship:altitude) ^ 2), end_twr is 2.6.
+    parameter start_pitch is 45, end_pitch is 10, start_twr is (ship:availablethrust / ship:mass) / (body:mu / (body:radius + ship:altitude) ^ 2), end_twr is 2.6.
     
 
     notify_msg("Maintaining Mid Altitude Ascent Profile").
@@ -81,35 +81,31 @@ function mid_altitude_ascent {
 function high_altitude_ascent { //TODO:
     parameter target_altitude is 200000.
     parameter target_heading is 90.
-    parameter max_pitch is 20.
+    parameter max_pitch is 40.
     // parameter start_pitch is 45, end_pitch is 5.
     clearScreen.
 
     notify_msg("Maintaining High Altitude Ascent Profile").
 
-    local throttle_param to max(0, min(1, ship:periapsis)).
+    local apoapsis_throttle_down_threshold to target_altitude/20 * 19.
 
-    lock target_throttle to (1 - throttle_param * (ship:apoapsis/target_altitude)).
+    lock throttle_param_periapsis to max(0, min(1, ship:periapsis)).
+    lock throttle_param_apoapsis to max(0, min(1, (ship:apoapsis -  apoapsis_throttle_down_threshold)/ (target_altitude - apoapsis_throttle_down_threshold))).
+
+    lock target_throttle to (1 - max(throttle_param_periapsis, throttle_param_apoapsis) * (ship:apoapsis/target_altitude * 0.99)).
     
     lock throttle to target_throttle.
     lock target_pitch to max(0, min(max_pitch, (1 - (eta:apoapsis - 30) / (60 - 30)) * (max_pitch - 0))).
     lock steering to heading(target_heading, target_pitch).
 
+ 
     until ship:apoapsis >= target_altitude {
 
         print "Target Pitch: " + target_pitch at(terminal:width/5, terminal:height/2).
         print "throttle down ratio: " +  max(0, min(1, ship:periapsis)) * ship:apoapsis/target_altitude * 0.99 at(terminal:width/5, terminal:height/2 + 5).
         print "adjusted throttle: " + target_throttle at(terminal:width/5, terminal:height/2 + 6).
         print "actual throttle: " + throttle at(terminal:width/5, terminal:height/2 + 8).
-        if (ship:apoapsis/target_altitude) > 0.96 {
-            set throttle_param to 0.99.
-        } else {
-            set throttle_param to max(0, min(1, ship:periapsis)) * 0.99.
-        }
-        
-        // if ship:periapsis > 0 {
-        //     lock throttle to 
-        // }
+
 
         wait 1.
     }
@@ -137,7 +133,7 @@ function high_altitude_ascent { //TODO:
 
 function orbital_insertion { 
     parameter target_altitude is 200000.
-    parameter target_heading is 90.
+    // parameter target_heading is 90.
     parameter autoWrap is true.
     clearScreen.
 
@@ -148,7 +144,8 @@ function orbital_insertion {
     print "Insertion Burn Time: First half -> " + burn_time[0] + " ; Second half ->" + burn_time[1] at(terminal:width/5, terminal:height/2 + 1).
     local total_burn_time is burn_time[0] + burn_time[1].
 
-    lock steering to heading(target_heading, 0).
+    // lock steering to heading(target_heading, 0).
+    lock steering to ship:prograde.
 
     if autoWrap {
         warpTo(time:seconds + eta:apoapsis - burn_time[0] - 30).
