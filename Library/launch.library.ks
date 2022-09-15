@@ -17,7 +17,7 @@ runOncePath("0:/Library/maths.library.ks").
 
 function low_altitude_ascent { 
     // default heading 90 (equatorial orbit)
-    parameter end_altitude is 30000.
+    parameter end_altitude is 10000.
     parameter target_heading is 90.
     parameter start_pitch is 90, end_pitch is 45, start_twr is 1.33, end_twr is 2.2.
     
@@ -50,7 +50,7 @@ function low_altitude_ascent {
 
 function mid_altitude_ascent { 
     // default heading 90 (equatorial orbit)
-    parameter end_altitude is 100000.
+    parameter end_altitude is 45000.
     parameter target_heading is 90.
     parameter start_pitch is 45, end_pitch is 10, start_twr is (ship:availablethrust / ship:mass) / (body:mu / (body:radius + ship:altitude) ^ 2), end_twr is 2.6.
     
@@ -79,9 +79,9 @@ function mid_altitude_ascent {
 }
 
 function high_altitude_ascent { //TODO:
-    parameter target_altitude is 200000.
+    parameter target_altitude is 80000.
     parameter target_heading is 90.
-    parameter max_pitch is 40.
+    parameter max_pitch is 10.
     // parameter start_pitch is 45, end_pitch is 5.
     clearScreen.
 
@@ -110,21 +110,19 @@ function high_altitude_ascent { //TODO:
         wait 1.
     }
 
-    // set target_throttle to 0.
+    lock throttle to 0.
 
    
-    // lock steering to ship:prograde.
-    // notify_msg("Wait for reaching Karmen line and adjust ship Apoapsis").
+    lock steering to ship:prograde.
+    notify_msg("Wait for reaching Karmen line and adjust ship Apoapsis").
 
-    // wait until ship:altitude > 70000.
+    wait until ship:altitude > 70000.
 
-    // notify_msg("Adjusting Apoapsis").
+    notify_msg("Adjusting Apoapsis").
+    lock throttle to  1 - (ship:apoapsis/target_altitude * 0.99).
 
-    // until ship:apoapsis >= target_altitude {
-    //     set target_throttle to  1 - (ship:apoapsis/target_altitude * 0.99).
-    //     wait 0.05.
-    // }
-
+    wait until ship:apoapsis >= target_altitude.
+    
     lock throttle to 0.
     unlock steering.
 
@@ -132,7 +130,7 @@ function high_altitude_ascent { //TODO:
 }
 
 function orbital_insertion { 
-    parameter target_altitude is 200000.
+    parameter target_altitude is 80000.
     // parameter target_heading is 90.
     parameter autoWrap is true.
     clearScreen.
